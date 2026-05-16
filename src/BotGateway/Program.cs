@@ -1,10 +1,12 @@
 using BotGateway.Configuration;
+using BotGateway.Discord.Commands;
 using BotGateway.Discord.HostedServices;
+using BotGateway.Discord.Interactions;
+using BotGateway.Infrastructure.Api.ApiClients;
 using Discord;
 using Discord.WebSocket;
 using DotNetEnv;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace BotGateway;
@@ -59,6 +61,8 @@ public static class Program
         services.Configure<GameApiSettings>(
             context.Configuration.GetSection(GameApiSettings.SectionName));
 
+
+
         services.AddSingleton(sp =>
         {
             var config = new DiscordSocketConfig
@@ -74,6 +78,30 @@ public static class Program
             return new DiscordSocketClient(config);
         });
 
+        services.AddHttpClient<GameApiClient>((sp, client) =>
+        {
+            var settings = sp.GetRequiredService<IOptions<GameApiSettings>>().Value;
+
+            client.BaseAddress = new Uri(settings.BaseUrl);
+        });
+
+        services.AddHttpClient<ServerApiClient>((sp, client) =>
+        {
+            var settings = sp.GetRequiredService<IOptions<GameApiSettings>>().Value;
+
+            client.BaseAddress = new Uri(settings.BaseUrl);
+        });
+
         services.AddHostedService<DiscordBotHostedService>();
+        services.AddSingleton<InteractionHandler>();
+        services.AddSingleton<SlashCommandRegistrar>();
+
+        services.AddSingleton<CommandRegistry>();
+
+        services.Scan(scan => scan
+            .FromAssemblyOf<ICommand>()
+            .AddClasses(c => c.AssignableTo<ICommand>())
+            .AsImplementedInterfaces()
+            .WithSingletonLifetime());
     }
 }

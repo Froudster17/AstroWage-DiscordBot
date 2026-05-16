@@ -1,4 +1,5 @@
 ﻿using BotGateway.Configuration;
+using BotGateway.Discord.Interactions;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
@@ -12,15 +13,21 @@ public sealed class DiscordBotHostedService : IHostedService
     private readonly DiscordSocketClient _client;
     private readonly DiscordSettings _settings;
     private readonly ILogger<DiscordBotHostedService> _logger;
+    private readonly InteractionHandler interactionHandler;
+    private readonly SlashCommandRegistrar _registrar;
 
     public DiscordBotHostedService(
         DiscordSocketClient client,
         IOptions<DiscordSettings> settings,
-        ILogger<DiscordBotHostedService> logger)
+        ILogger<DiscordBotHostedService> logger,
+        InteractionHandler interactionHandler,
+        SlashCommandRegistrar registrar)
     {
         _client = client;
         _settings = settings.Value;
         _logger = logger;
+        this.interactionHandler = interactionHandler;
+        _registrar = registrar;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -30,6 +37,7 @@ public sealed class DiscordBotHostedService : IHostedService
         _client.Log += OnDiscordLog;
         _client.Ready += OnReady;
         _client.Disconnected += OnDisconnected;
+        _client.InteractionCreated += OnInteractionCreated;
 
         await _client.LoginAsync(
             TokenType.Bot,
@@ -49,13 +57,13 @@ public sealed class DiscordBotHostedService : IHostedService
         _logger.LogInformation("Discord bot stopped.");
     }
 
-    private Task OnReady()
+    private async Task OnReady()
     {
         _logger.LogInformation(
             "Discord bot connected as {Username}",
             _client.CurrentUser.Username);
 
-        return Task.CompletedTask;
+        await _registrar.RegisterAsync();
     }
 
     private Task OnDisconnected(Exception? ex)
@@ -63,6 +71,11 @@ public sealed class DiscordBotHostedService : IHostedService
         _logger.LogWarning(ex, "Discord client disconnected.");
 
         return Task.CompletedTask;
+    }
+
+    private async Task OnInteractionCreated(SocketInteraction interaction)
+    {
+        await interactionHandler.HandleAsync(interaction);
     }
 
     private Task OnDiscordLog(LogMessage message)
