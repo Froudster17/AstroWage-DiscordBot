@@ -4,7 +4,7 @@
     {
         public Guid GuildId { get; set; }
 
-        public string DiscordGuildId { get; set; } = null!;
+        public ulong DiscordGuildId { get; set; }
 
         public bool Created { get; set; }
     }

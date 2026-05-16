@@ -2,6 +2,6 @@
 {
     public class SetupGuildRequest
     {
-        public string DiscordGuildId { get; set; } = null!;
+        public ulong DiscordGuildId { get; set; }
     }
 }

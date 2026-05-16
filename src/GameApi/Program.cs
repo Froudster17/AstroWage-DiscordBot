@@ -1,5 +1,5 @@
+using GameApi.Extensions;
 using GameApi.Infrastructure.Persistence;
-using GameApi.Features.Guilds.Setup;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -60,15 +60,6 @@ public class Program
 
     private static void ConfigureEndpoints(WebApplication app)
     {
-        app.MapSetupGuildEndpoint();
-
-
-        app.MapGet("/health", () =>
-        {
-            return Results.Ok(new
-            {
-                status = "healthy"
-            });
-        });
+        app.MapEndpoints();
     }
 }

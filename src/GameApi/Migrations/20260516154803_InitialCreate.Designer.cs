@@ -3,6 +3,7 @@ using System;
 using GameApi.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GameApi.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    partial class GameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260516154803_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,33 +42,6 @@ namespace GameApi.Migrations
                     b.ToTable("Guilds");
                 });
 
-            modelBuilder.Entity("GameApi.Domain.Entities.Item", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<long>("BaseValue")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("Stackable")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Items");
-                });
-
             modelBuilder.Entity("GameApi.Domain.Entities.Location", b =>
                 {
                     b.Property<Guid>("Id")
@@ -84,7 +60,7 @@ namespace GameApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Location");
                 });
 
             modelBuilder.Entity("GameApi.Domain.Entities.Player", b =>
@@ -130,46 +106,6 @@ namespace GameApi.Migrations
                     b.ToTable("Players");
                 });
 
-            modelBuilder.Entity("GameApi.Domain.Entities.PlayerInventory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("GuildId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ItemId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("LocationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("PlayerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StorageType")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GuildId");
-
-                    b.HasIndex("ItemId");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("PlayerId");
-
-                    b.ToTable("PlayerInventories");
-                });
-
             modelBuilder.Entity("GameApi.Domain.Entities.Player", b =>
                 {
                     b.HasOne("GameApi.Domain.Entities.Location", "CurrentLocation")
@@ -187,41 +123,6 @@ namespace GameApi.Migrations
                     b.Navigation("CurrentLocation");
 
                     b.Navigation("Guild");
-                });
-
-            modelBuilder.Entity("GameApi.Domain.Entities.PlayerInventory", b =>
-                {
-                    b.HasOne("GameApi.Domain.Entities.Guild", "Guild")
-                        .WithMany()
-                        .HasForeignKey("GuildId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GameApi.Domain.Entities.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GameApi.Domain.Entities.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GameApi.Domain.Entities.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Guild");
-
-                    b.Navigation("Item");
-
-                    b.Navigation("Location");
-
-                    b.Navigation("Player");
                 });
 #pragma warning restore 612, 618
         }

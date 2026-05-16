@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; }
 
-        public string DiscordGuildId { get; set; } = null!;
+        public ulong DiscordGuildId { get; set; }
 
         public DateTime CreatedAtUtc { get; set; }
     }

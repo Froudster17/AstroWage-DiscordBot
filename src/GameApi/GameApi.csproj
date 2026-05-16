@@ -8,11 +8,9 @@
 
   <ItemGroup>
     <Folder Include="Contracts\" />
-    <Folder Include="Common\" />
     <Folder Include="Configuration\" />
     <Folder Include="Infrastructure\Persistence\Configurations\" />
     <Folder Include="Middleware\" />
-    <Folder Include="Extensions\" />
     <Folder Include="Docker\" />
   </ItemGroup>
 
