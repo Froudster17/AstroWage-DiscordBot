@@ -2,8 +2,6 @@
 using BotGateway.Discord.Interactions;
 using Discord;
 using Discord.WebSocket;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace BotGateway.Discord.HostedServices;

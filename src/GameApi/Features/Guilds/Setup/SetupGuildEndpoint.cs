@@ -9,7 +9,7 @@ public class SetupGuildEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/guilds/setup", async (
+        app.MapPost("/guild/setup", async (
             SetupGuildRequest request,
             GameDbContext dbContext) =>
         {

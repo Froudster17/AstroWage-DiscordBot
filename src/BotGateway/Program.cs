@@ -92,6 +92,13 @@ public static class Program
             client.BaseAddress = new Uri(settings.BaseUrl);
         });
 
+        services.AddHttpClient<PlayerApiClient>((sp, client) =>
+        {
+            var settings = sp.GetRequiredService<IOptions<GameApiSettings>>().Value;
+
+            client.BaseAddress = new Uri(settings.BaseUrl);
+        });
+
         services.AddHostedService<DiscordBotHostedService>();
         services.AddSingleton<InteractionHandler>();
         services.AddSingleton<SlashCommandRegistrar>();

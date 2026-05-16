@@ -6,19 +6,17 @@
 
         public Guid GuildId { get; set; }
 
-        public Guild Guild { get; set; } = null!;
+        public required Guild Guild { get; set; }
 
         public ulong DiscordUserId { get; set; }
 
-        public string Username { get; set; } = null!;
+        public required string Username { get; set; }
 
         public long Credits { get; set; }
 
         public long Xp { get; set; }
 
-        public Guid CurrentLocationId { get; set; }
-
-        public Location CurrentLocation { get; set; } = null!;
+        public required Location CurrentLocation { get; set; }
 
         public Guid? CurrentShipId { get; set; }
 

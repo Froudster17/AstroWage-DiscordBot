@@ -6,14 +6,14 @@ using Discord.WebSocket;
 
 namespace BotGateway.Discord.Commands.Server_Commands
 {
-    [SlashCommand("setup", "Setup the bot for your server")]
+    [SlashCommand("setup_bot", "Setup the bot for your server")]
     public sealed class SetupCommand : ICommand
     {
-        private readonly GuildApiClient _serverApi;
+        private readonly GuildApiClient _guildApi;
 
-        public SetupCommand(GuildApiClient serverApi)
+        public SetupCommand(GuildApiClient guildApi)
         {
-            _serverApi = serverApi;
+            _guildApi = guildApi;
         }
 
         public async Task ExecuteAsync(SocketSlashCommand command)
@@ -30,7 +30,7 @@ namespace BotGateway.Discord.Commands.Server_Commands
                 DiscordGuildId = command.GuildId.Value
             };
 
-            var result = await _serverApi.SetupGuildAsync(request);
+            var result = await _guildApi.SetupGuildAsync(request);
 
             if (result is null)
             {

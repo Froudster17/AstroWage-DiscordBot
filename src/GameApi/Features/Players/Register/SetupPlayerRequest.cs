@@ -1,6 +1,6 @@
-﻿namespace BotGateway.Infrastructure.Api.Contracts.Player.Requests
+﻿namespace GameApi.Features.Guilds.Setup
 {
-    public sealed class SetupPlayerRequest
+    public class SetupPlayerRequest
     {
         public ulong DiscordGuildId { get; set; }
 

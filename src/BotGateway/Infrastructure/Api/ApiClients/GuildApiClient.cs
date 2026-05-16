@@ -2,24 +2,25 @@
 using BotGateway.Infrastructure.Api.Contracts.Server.Requests;
 using System.Net.Http.Json;
 
-namespace BotGateway.Infrastructure.Api.ApiClients;
-
-public sealed class GuildApiClient
+namespace BotGateway.Infrastructure.Api.ApiClients
 {
-    private readonly HttpClient _http;
-
-    public GuildApiClient(HttpClient http)
+    public sealed class GuildApiClient
     {
-        _http = http;
-    }
+        private readonly HttpClient _http;
 
-    public async Task<SetupGuildResponse?> SetupGuildAsync(SetupGuildRequest request)
-    {
-        var response = await _http.PostAsJsonAsync("/guilds/setup", request);
+        public GuildApiClient(HttpClient http)
+        {
+            _http = http;
+        }
 
-        if (!response.IsSuccessStatusCode)
-            return null;
+        public async Task<SetupGuildResponse?> SetupGuildAsync(SetupGuildRequest request)
+        {
+            var response = await _http.PostAsJsonAsync("/guild/setup", request);
 
-        return await response.Content.ReadFromJsonAsync<SetupGuildResponse>();
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            return await response.Content.ReadFromJsonAsync<SetupGuildResponse>();
+        }
     }
 }
