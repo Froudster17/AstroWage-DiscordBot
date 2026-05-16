@@ -1,6 +1,7 @@
 ﻿using BotGateway.Discord.Commands.Attributes;
 using BotGateway.Infrastructure.Api.ApiClients;
 using BotGateway.Infrastructure.Api.Contracts.Server.Requests;
+using Discord;
 using Discord.WebSocket;
 
 namespace BotGateway.Discord.Commands.Server_Commands
@@ -37,11 +38,17 @@ namespace BotGateway.Discord.Commands.Server_Commands
                 return;
             }
 
-            var message = result.Created
-                ? "✅ Server created successfully!"
-                : "ℹ️ Server already exists.";
+            var embed = new EmbedBuilder()
+                .WithTitle("AstroWage Setup")
+                .WithColor(result.Created ? Color.Green : Color.Blue)
+                .WithDescription(result.Created
+                    ? "Server successfully created and registered in the system."
+                    : "This server was already set up.")
+                .AddField("Guild ID", command.GuildId.Value, inline: false)
+                .AddField("Status", result.Created ? "Created" : "Already Exists", inline: true)
+                .Build();
 
-            await command.RespondAsync(message, ephemeral: true);
+            await command.RespondAsync(embed: embed, ephemeral: true);
         }
     }
 }
