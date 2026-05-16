@@ -12,6 +12,8 @@ namespace GameApi.Infrastructure.Persistence
 
         public DbSet<Player> Players => Set<Player>();
 
+        public DbSet<Guild> Guilds => Set<Guild>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
