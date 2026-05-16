@@ -1,14 +1,79 @@
-namespace BotGateway
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = Host.CreateApplicationBuilder(args);
-            builder.Services.AddHostedService<Worker>();
+using BotGateway.Configuration;
+using BotGateway.Discord.HostedServices;
+using Discord;
+using Discord.WebSocket;
+using DotNetEnv;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
 
-            var host = builder.Build();
-            host.Run();
+namespace BotGateway;
+
+public static class Program
+{
+    public static async Task Main(string[] args)
+    {
+        Env.Load();
+
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+
+        try
+        {
+            Log.Information("Starting BotGateway...");
+
+            var host = Host.CreateDefaultBuilder(args)
+                .UseSerilog((context, services, configuration) =>
+                {
+                    configuration
+                        .ReadFrom.Configuration(context.Configuration)
+                        .ReadFrom.Services(services)
+                        .WriteTo.Console();
+                })
+                .ConfigureServices((context, services) =>
+                {
+                    ConfigureServices(context, services);
+                })
+                .Build();
+
+            await host.RunAsync();
         }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "BotGateway terminated unexpectedly.");
+        }
+        finally
+        {
+            await Log.CloseAndFlushAsync();
+        }
+    }
+
+    private static void ConfigureServices(
+        HostBuilderContext context,
+        IServiceCollection services)
+    {
+        services.Configure<DiscordSettings>(
+            context.Configuration.GetSection(DiscordSettings.SectionName));
+
+        services.Configure<GameApiSettings>(
+            context.Configuration.GetSection(GameApiSettings.SectionName));
+
+        services.AddSingleton(sp =>
+        {
+            var config = new DiscordSocketConfig
+            {
+                GatewayIntents =
+                    GatewayIntents.Guilds |
+                    GatewayIntents.GuildMessages |
+                    GatewayIntents.MessageContent,
+
+                AlwaysDownloadUsers = false
+            };
+
+            return new DiscordSocketClient(config);
+        });
+
+        services.AddHostedService<DiscordBotHostedService>();
     }
 }
