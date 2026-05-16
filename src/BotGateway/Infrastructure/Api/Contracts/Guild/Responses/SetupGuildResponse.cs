@@ -10,7 +10,7 @@ namespace BotGateway.Infrastructure.Api.Contracts.Server.Responses
     {
         public Guid GuildId { get; set; }
 
-        public string DiscordGuildId { get; set; } = string.Empty;
+        public ulong DiscordGuildId { get; set; }
 
         public bool Created { get; set; }
     }

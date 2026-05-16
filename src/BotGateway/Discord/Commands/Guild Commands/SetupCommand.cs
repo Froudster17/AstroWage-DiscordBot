@@ -8,9 +8,9 @@ namespace BotGateway.Discord.Commands.Server_Commands
     [SlashCommand("setup", "Setup the bot for your server")]
     public sealed class SetupCommand : ICommand
     {
-        private readonly ServerApiClient _serverApi;
+        private readonly GuildApiClient _serverApi;
 
-        public SetupCommand(ServerApiClient serverApi)
+        public SetupCommand(GuildApiClient serverApi)
         {
             _serverApi = serverApi;
         }
@@ -26,7 +26,7 @@ namespace BotGateway.Discord.Commands.Server_Commands
 
             var request = new SetupGuildRequest
             {
-                DiscordGuildId = command.GuildId.Value.ToString() ?? string.Empty
+                DiscordGuildId = command.GuildId.Value
             };
 
             var result = await _serverApi.SetupGuildAsync(request);
@@ -38,8 +38,8 @@ namespace BotGateway.Discord.Commands.Server_Commands
             }
 
             var message = result.Created
-                ? "✅ Guild created successfully!"
-                : "ℹ️ Guild already exists.";
+                ? "✅ Server created successfully!"
+                : "ℹ️ Server already exists.";
 
             await command.RespondAsync(message, ephemeral: true);
         }

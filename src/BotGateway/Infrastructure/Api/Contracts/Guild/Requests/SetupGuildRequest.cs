@@ -8,6 +8,6 @@ namespace BotGateway.Infrastructure.Api.Contracts.Server.Requests
 {
     public sealed class SetupGuildRequest
     {
-        public string? DiscordGuildId { get; set; }
+        public ulong DiscordGuildId { get; set; }
     }
 }

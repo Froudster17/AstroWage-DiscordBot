@@ -85,7 +85,7 @@ public static class Program
             client.BaseAddress = new Uri(settings.BaseUrl);
         });
 
-        services.AddHttpClient<ServerApiClient>((sp, client) =>
+        services.AddHttpClient<GuildApiClient>((sp, client) =>
         {
             var settings = sp.GetRequiredService<IOptions<GameApiSettings>>().Value;
 

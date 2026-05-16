@@ -4,11 +4,11 @@ using System.Net.Http.Json;
 
 namespace BotGateway.Infrastructure.Api.ApiClients;
 
-public sealed class ServerApiClient
+public sealed class GuildApiClient
 {
     private readonly HttpClient _http;
 
-    public ServerApiClient(HttpClient http)
+    public GuildApiClient(HttpClient http)
     {
         _http = http;
     }
